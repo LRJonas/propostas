@@ -28,10 +28,10 @@ public class Proposta {
     private Long funcionarioId;
 
     @Column
-    private Integer aprovar;
+    private int aprovar = 0;
 
     @Column
-    private Integer rejeitar;
+    private int rejeitar = 0;
 
     @Column
     private boolean ativo = false;
