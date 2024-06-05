@@ -18,22 +18,21 @@ public class Proposta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false, length = 200)
     private String titulo;
 
-    @Column
+    @Column(nullable = false, length = 500)
     private String descricao;
 
-    @Column(name = "funcionario_id")
+    @Column(name = "funcionario_id", nullable = false)
     private Long funcionarioId;
 
-    @Column
+    @Column(nullable = false)
     private int aprovar = 0;
 
-    @Column
+    @Column(nullable = false)
     private int rejeitar = 0;
 
-    @Column
+    @Column(nullable = false)
     private boolean ativo = false;
 }
-
