@@ -4,6 +4,7 @@ import com.guardioes.propostas.entity.Proposta;
 import com.guardioes.propostas.service.PropostaService;
 import com.guardioes.propostas.web.dto.PropostaCreateDto;
 import com.guardioes.propostas.web.dto.PropostaResponseDto;
+import com.guardioes.propostas.web.dto.VotacaoInitDto;
 import com.guardioes.propostas.web.model.PropostaMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,5 +23,12 @@ public class PropostaController {
         Proposta proposta = propostaService.criar(PropostaMapper.paraProposta(dto));
         return ResponseEntity.status(HttpStatus.CREATED).body(PropostaMapper.paraDto(proposta));
     }
+
+    @PatchMapping("/iniciar-votacao")
+    public ResponseEntity<PropostaResponseDto> iniciarVotacao(@RequestBody VotacaoInitDto dto) {
+        Proposta proposta = propostaService.iniciarVotacao(dto);
+        return ResponseEntity.ok(PropostaMapper.paraDto(proposta));
+    }
 }
+
 
