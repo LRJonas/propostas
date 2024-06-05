@@ -3,6 +3,7 @@ package com.guardioes.propostas.service;
 import com.guardioes.propostas.entity.Proposta;
 import com.guardioes.propostas.entity.Votacao;
 import com.guardioes.propostas.repository.PropostaRepository;
+import com.guardioes.propostas.web.dto.VotacaoDto;
 import com.guardioes.propostas.web.dto.VotacaoInitDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,9 +36,28 @@ public class PropostaService {
                 proposta.setAtivo(false);
                 propostaRepository.save(proposta);
             }
-        }, dto.getTempo() * 60000);
+        }, dto.getTempo() * 60000L);
 
         return propostaRepository.save(proposta);
     }
 
+    @Transactional
+    public Proposta votar(VotacaoDto dto) {
+        Proposta proposta = propostaRepository.findByTitulo(dto.getTitulo())
+                .orElseThrow(() -> new RuntimeException("Proposta not found"));
+
+        if (!proposta.isAtivo()) {
+            throw new RuntimeException("A proposta não está ativapara votação");
+        }
+
+        if (dto.getStatusVaga() == Votacao.StatusVaga.APROVAR) {
+            proposta.setAprovar(proposta.getAprovar() + 1);
+        } else if (dto.getStatusVaga() == Votacao.StatusVaga.REJEITAR) {
+            proposta.setRejeitar(proposta.getRejeitar() + 1);
+        } else {
+            throw new RuntimeException("Invalid vote type");
+        }
+
+        return propostaRepository.save(proposta);
+    }
 }

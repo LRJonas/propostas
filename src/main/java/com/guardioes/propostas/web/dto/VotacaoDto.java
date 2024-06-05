@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VotacaoDto {
-    private String tituloProposta;
-    private String funcionarioCpf;
+    private String titulo;
+    private String cpf;
     private Votacao.StatusVaga statusVaga;
 }

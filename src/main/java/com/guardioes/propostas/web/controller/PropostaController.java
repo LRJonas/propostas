@@ -4,6 +4,7 @@ import com.guardioes.propostas.entity.Proposta;
 import com.guardioes.propostas.service.PropostaService;
 import com.guardioes.propostas.web.dto.PropostaCreateDto;
 import com.guardioes.propostas.web.dto.PropostaResponseDto;
+import com.guardioes.propostas.web.dto.VotacaoDto;
 import com.guardioes.propostas.web.dto.VotacaoInitDto;
 import com.guardioes.propostas.web.model.PropostaMapper;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +32,11 @@ public class PropostaController {
     }
 
     @PostMapping("/votar")
-    public ResponseEntity<PropostaResponseDto> Votar(@RequestBody VotacaoInitDto dto) {
-        Proposta proposta = propostaService.iniciarVotacao(dto);
+    public ResponseEntity<PropostaResponseDto> Votar(@RequestBody VotacaoDto dto) {
+        Proposta proposta = propostaService.votar(dto);
         return ResponseEntity.ok(PropostaMapper.paraDto(proposta));
     }
+
 }
 
 
