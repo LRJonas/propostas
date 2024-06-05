@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,12 +16,11 @@ public class Votacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "proposta_id")
-    private Proposta proposta;
+    @JoinColumn(name = "titulo")
+    private String titulo;
 
-    @Column(name = "funcionario_id", nullable = false)
-    private Long funcionarioId;
+    @Column(name = "funcionario_cpf", nullable = false)
+    private String funcionarioCpf;
 
     @Enumerated(EnumType.STRING)
     private StatusVaga voto;
