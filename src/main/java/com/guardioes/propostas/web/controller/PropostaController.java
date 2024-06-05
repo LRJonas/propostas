@@ -29,6 +29,12 @@ public class PropostaController {
         Proposta proposta = propostaService.iniciarVotacao(dto);
         return ResponseEntity.ok(PropostaMapper.paraDto(proposta));
     }
+
+    @PostMapping("/votar")
+    public ResponseEntity<PropostaResponseDto> Votar(@RequestBody VotacaoInitDto dto) {
+        Proposta proposta = propostaService.iniciarVotacao(dto);
+        return ResponseEntity.ok(PropostaMapper.paraDto(proposta));
+    }
 }
 
 

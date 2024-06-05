@@ -28,6 +28,6 @@ public class Votacao {
     private StatusVaga voto;
 
     public enum StatusVaga {
-        Aprovar, Rejeitar
+        APROVAR, REJEITAR
     }
 }

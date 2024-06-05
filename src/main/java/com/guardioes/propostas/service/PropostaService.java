@@ -1,6 +1,7 @@
 package com.guardioes.propostas.service;
 
 import com.guardioes.propostas.entity.Proposta;
+import com.guardioes.propostas.entity.Votacao;
 import com.guardioes.propostas.repository.PropostaRepository;
 import com.guardioes.propostas.web.dto.VotacaoInitDto;
 import lombok.RequiredArgsConstructor;
@@ -38,4 +39,5 @@ public class PropostaService {
 
         return propostaRepository.save(proposta);
     }
+
 }
