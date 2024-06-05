@@ -34,5 +34,8 @@ public class Proposta {
     private int rejeitar = 0;
 
     @Column(nullable = false)
+    private int tempo = 1;
+
+    @Column(nullable = false)
     private boolean ativo = false;
 }
