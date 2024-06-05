@@ -26,7 +26,7 @@ public class PropostaController {
 
     @PatchMapping("/iniciar-votacao")
     public ResponseEntity<PropostaResponseDto> iniciarVotacao(@RequestBody VotacaoInitDto dto) {
-        Proposta proposta = propostaService.iniciarVotacao(dto.getFuncionarioCpf(), dto.getPropostaTitulo(), dto.getTempo());
+        Proposta proposta = propostaService.iniciarVotacao(dto);
         return ResponseEntity.ok(PropostaMapper.paraDto(proposta));
     }
 }
