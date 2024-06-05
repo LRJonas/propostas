@@ -24,9 +24,6 @@ public class Proposta {
     @Column(nullable = false, length = 500)
     private String descricao;
 
-    @Column(name = "funcionario_id", nullable = false)
-    private Long funcionarioId;
-
     @Column(nullable = false)
     private int aprovar = 0;
 

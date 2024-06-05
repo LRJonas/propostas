@@ -1,5 +1,7 @@
 package com.guardioes.propostas.service;
 
+import com.guardioes.propostas.client.funcionarios.Funcionario;
+import com.guardioes.propostas.client.funcionarios.FuncionariosClient;
 import com.guardioes.propostas.entity.Proposta;
 import com.guardioes.propostas.entity.Votacao;
 import com.guardioes.propostas.repository.PropostaRepository;
@@ -10,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -18,6 +21,8 @@ import java.util.TimerTask;
 public class PropostasService {
 
     private final PropostaRepository propostaRepository;
+    private final FuncionariosClient funcionariosClient;
+    private final VotacaoRepository votacaoRepository;
 
     @Transactional
     public Proposta criar(Proposta proposta) {
@@ -48,8 +53,24 @@ public class PropostasService {
                 .orElseThrow(() -> new RuntimeException("Proposta not found"));
 
         if (!proposta.isAtivo()) {
-            throw new RuntimeException("A proposta não está ativapara votação");
+            throw new RuntimeException("A proposta não está ativa para votação");
         }
+
+        Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(dto.getCpf());
+        if (funcionario == null) {
+            throw new RuntimeException("Funcionário não encontrado");
+        }
+
+        boolean cpfJaVotou = votacaoRepository.existsByTituloAndFuncionarioCpf(dto.getTitulo(),dto.getCpf());
+        if (cpfJaVotou) {
+            throw new RuntimeException("Este CPF já votou nesta proposta");
+        }
+
+        Votacao voto = new Votacao();
+        voto.setTitulo(dto.getTitulo());
+        voto.setFuncionarioCpf(dto.getCpf());
+        voto.setVoto(dto.getStatusVaga());
+        votacaoRepository.save(voto);
 
         if (dto.getStatusVaga() == Votacao.StatusVaga.APROVAR) {
             proposta.setAprovar(proposta.getAprovar() + 1);
@@ -58,7 +79,6 @@ public class PropostasService {
         } else {
             throw new RuntimeException("Invalid vote type");
         }
-
 
         return propostaRepository.save(proposta);
     }

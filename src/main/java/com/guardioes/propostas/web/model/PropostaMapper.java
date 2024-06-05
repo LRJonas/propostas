@@ -8,14 +8,11 @@ import org.modelmapper.ModelMapper;
 public class PropostaMapper {
     public static Proposta paraProposta(PropostaCreateDto dto) {
         Proposta proposta = new ModelMapper().map(dto, Proposta.class);
-        proposta.setFuncionarioId(1L);
         return proposta;
     }
 
     public static PropostaResponseDto paraDto(Proposta proposta) {
         PropostaResponseDto dto = new ModelMapper().map(proposta, PropostaResponseDto.class);
-        dto.setFuncionarioNome("Nome");
-        dto.setFuncionarioCpf("Cpf");
         return dto;
     }
 }
