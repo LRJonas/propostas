@@ -1,7 +1,7 @@
 package com.guardioes.propostas.web.controller;
 
 import com.guardioes.propostas.entity.Proposta;
-import com.guardioes.propostas.service.PropostaService;
+import com.guardioes.propostas.service.PropostasService;
 import com.guardioes.propostas.web.dto.PropostaCreateDto;
 import com.guardioes.propostas.web.dto.PropostaResponseDto;
 import com.guardioes.propostas.web.dto.VotacaoDto;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/propostas")
 public class PropostaController {
 
-    private final PropostaService propostaService;
+    private final PropostasService propostaService;
 
     @PostMapping
     public ResponseEntity<PropostaResponseDto> criar(@RequestBody PropostaCreateDto dto) {

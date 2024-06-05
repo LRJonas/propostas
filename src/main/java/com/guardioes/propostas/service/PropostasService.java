@@ -3,6 +3,7 @@ package com.guardioes.propostas.service;
 import com.guardioes.propostas.entity.Proposta;
 import com.guardioes.propostas.entity.Votacao;
 import com.guardioes.propostas.repository.PropostaRepository;
+import com.guardioes.propostas.repository.VotacaoRepository;
 import com.guardioes.propostas.web.dto.VotacaoDto;
 import com.guardioes.propostas.web.dto.VotacaoInitDto;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.TimerTask;
 
 @Service
 @RequiredArgsConstructor
-public class PropostaService {
+public class PropostasService {
 
     private final PropostaRepository propostaRepository;
 
@@ -57,6 +58,7 @@ public class PropostaService {
         } else {
             throw new RuntimeException("Invalid vote type");
         }
+
 
         return propostaRepository.save(proposta);
     }
