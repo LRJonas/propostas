@@ -14,7 +14,8 @@ public class PropostaResponseDto {
     private String descricao;
     private String funcionarioNome;
     private String funcionarioCpf;
-    private Integer aprovar;
-    private Integer rejeitar;
+    private int aprovar;
+    private int rejeitar;
+    private int tempo;
     private boolean ativo;
 }
