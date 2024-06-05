@@ -9,12 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PropostaResponseDto {
-    private String titulo;
-    private String descricao;
-    private String funcionarioNome;
+public class VotacaoInitDto {
+    private String propostaTitulo;
     private String funcionarioCpf;
-    private Integer aprovar;
-    private Integer rejeitar;
-    private boolean ativo;
 }
