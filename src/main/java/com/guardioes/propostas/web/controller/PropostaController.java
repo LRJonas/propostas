@@ -1,5 +1,7 @@
 package com.guardioes.propostas.web.controller;
 
+import com.guardioes.propostas.client.funcionarios.Funcionario;
+import com.guardioes.propostas.client.funcionarios.FuncionariosClient;
 import com.guardioes.propostas.entity.Proposta;
 import com.guardioes.propostas.service.PropostasService;
 import com.guardioes.propostas.web.dto.PropostaCreateDto;
@@ -18,25 +20,27 @@ import org.springframework.web.bind.annotation.*;
 public class PropostaController {
 
     private final PropostasService propostaService;
-    private final PropostaMapper propostaMapper; // Injetar PropostaMapper
+    private final FuncionariosClient funcionariosClient;
 
     @PostMapping
     public ResponseEntity<PropostaResponseDto> criar(@RequestBody PropostaCreateDto dto) {
         Proposta proposta = propostaService.criar(PropostaMapper.paraProposta(dto));
-        // Usar a instância injetada de PropostaMapper para chamar paraDto
-        return ResponseEntity.status(HttpStatus.CREATED).body(PropostaMapper.paraDto(proposta));
+        Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(proposta.getFuncionarioCpf());
+        return ResponseEntity.status(HttpStatus.CREATED).body(PropostaMapper.paraDto(proposta,funcionario));
     }
 
     @PatchMapping("/iniciar-votacao")
     public ResponseEntity<PropostaResponseDto> iniciarVotacao(@RequestBody VotacaoInitDto dto) {
         Proposta proposta = propostaService.iniciarVotacao(dto);
-        return ResponseEntity.ok(PropostaMapper.paraDto(proposta));
+        Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(proposta.getFuncionarioCpf());
+        return ResponseEntity.ok(PropostaMapper.paraDto(proposta,funcionario));
     }
 
     @PostMapping("/votar")
     public ResponseEntity<PropostaResponseDto> votar(@RequestBody VotacaoDto dto) {
         Proposta proposta = propostaService.votar(dto);
-        return ResponseEntity.ok(PropostaMapper.paraDto(proposta));
+        Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(proposta.getFuncionarioCpf());
+        return ResponseEntity.ok(PropostaMapper.paraDto(proposta,funcionario));
     }
 
 }
