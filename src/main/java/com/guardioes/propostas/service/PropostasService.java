@@ -26,6 +26,10 @@ public class PropostasService {
 
     @Transactional
     public Proposta criar(Proposta proposta) {
+        Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(proposta.getFuncionarioCpf());
+        if (funcionario == null) {
+            throw new RuntimeException("Funcionário não encontrado");
+        }
         return propostaRepository.save(proposta);
     }
 

@@ -24,6 +24,9 @@ public class Proposta {
     @Column(nullable = false, length = 500)
     private String descricao;
 
+    @Column(nullable = false, length = 11)
+    private String funcionarioCpf;
+
     @Column(nullable = false)
     private int aprovar = 0;
 
