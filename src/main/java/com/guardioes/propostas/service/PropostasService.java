@@ -4,6 +4,9 @@ import com.guardioes.propostas.client.funcionarios.Funcionario;
 import com.guardioes.propostas.client.funcionarios.FuncionariosClient;
 import com.guardioes.propostas.entity.Proposta;
 import com.guardioes.propostas.entity.Votacao;
+import com.guardioes.propostas.exception.ExcecaoCpfDuplicado;
+import com.guardioes.propostas.exception.ExcecaoFuncionarioInvalido;
+import com.guardioes.propostas.exception.ExcecaoPropostaInexistente;
 import com.guardioes.propostas.repository.PropostaRepository;
 import com.guardioes.propostas.repository.VotacaoRepository;
 import com.guardioes.propostas.web.dto.VotacaoDto;
@@ -28,18 +31,18 @@ public class PropostasService {
     public Proposta criar(Proposta proposta) {
         Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(proposta.getFuncionarioCpf());
         if (funcionario == null) {
-            throw new RuntimeException("Funcionário não encontrado");
+            throw new ExcecaoFuncionarioInvalido("Funcionário não encontrado");
         }
         return propostaRepository.save(proposta);
     }
 
     public Proposta iniciarVotacao(VotacaoInitDto dto) {
         Proposta proposta = propostaRepository.findByTitulo(dto.getPropostaTitulo())
-                .orElseThrow(() -> new RuntimeException("Proposta not found"));
+                .orElseThrow(() -> new ExcecaoPropostaInexistente("Proposta não encontrada"));
 
         Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(dto.getFuncionarioCpf());
         if (funcionario == null) {
-            throw new RuntimeException("Funcionário não encontrado");
+            throw new ExcecaoFuncionarioInvalido("Funcionário não encontrado");
         }
 
         proposta.setAtivo(true);
@@ -59,7 +62,7 @@ public class PropostasService {
     @Transactional
     public Proposta votar(VotacaoDto dto) {
         Proposta proposta = propostaRepository.findByTitulo(dto.getTitulo())
-                .orElseThrow(() -> new RuntimeException("Proposta not found"));
+                .orElseThrow(() -> new ExcecaoPropostaInexistente("Proposta não encontrada"));
 
         if (!proposta.isAtivo()) {
             throw new RuntimeException("A proposta não está ativa para votação");
@@ -67,12 +70,12 @@ public class PropostasService {
 
         Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(dto.getCpf());
         if (funcionario == null) {
-            throw new RuntimeException("Funcionário não encontrado");
+            throw new ExcecaoFuncionarioInvalido("Funcionário não encontrado");
         }
 
         boolean cpfJaVotou = votacaoRepository.existsByTituloAndFuncionarioCpf(dto.getTitulo(),dto.getCpf());
         if (cpfJaVotou) {
-            throw new RuntimeException("Este CPF já votou nesta proposta");
+            throw new ExcecaoCpfDuplicado("Este CPF já votou nesta proposta");
         }
 
         Votacao voto = new Votacao();
