@@ -15,12 +15,11 @@ import com.guardioes.propostas.web.dto.VotacaoInitDto;
 import com.guardioes.propostas.web.model.PropostaMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.mapper.Mapper;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
