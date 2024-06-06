@@ -18,7 +18,7 @@ public class Proposta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 200)
+    @Column(nullable = false, length = 200, unique = true)
     private String titulo;
 
     @Column(nullable = false, length = 500)
@@ -34,7 +34,7 @@ public class Proposta {
     private int rejeitar = 0;
 
     @Column(nullable = false)
-    private int tempo = 1;
+    private long tempo = 1;
 
     @Column(nullable = false)
     private boolean ativo = false;

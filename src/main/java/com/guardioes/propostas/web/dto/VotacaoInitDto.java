@@ -12,5 +12,5 @@ import lombok.Setter;
 public class VotacaoInitDto {
     private String propostaTitulo;
     private String funcionarioCpf;
-    private int tempo=1 ;
+    private long tempo = 1 ;
 }
