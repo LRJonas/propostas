@@ -4,9 +4,7 @@ import com.guardioes.propostas.entity.Proposta;
 import com.guardioes.propostas.web.dto.PropostaCreateDto;
 import com.guardioes.propostas.web.dto.PropostaResponseDto;
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
 
-@Component
 public class PropostaMapper {
 
     public static Proposta paraProposta(PropostaCreateDto dto) {
