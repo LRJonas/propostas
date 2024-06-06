@@ -1,14 +1,21 @@
 package com.guardioes.propostas.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guardioes.propostas.client.funcionarios.Funcionario;
 import com.guardioes.propostas.client.funcionarios.FuncionariosClient;
 import com.guardioes.propostas.entity.Proposta;
 import com.guardioes.propostas.entity.Votacao;
 import com.guardioes.propostas.repository.PropostaRepository;
 import com.guardioes.propostas.repository.VotacaoRepository;
+import com.guardioes.propostas.web.dto.PropostaResponseDto;
 import com.guardioes.propostas.web.dto.VotacaoDto;
 import com.guardioes.propostas.web.dto.VotacaoInitDto;
+import com.guardioes.propostas.web.model.PropostaMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.mapper.Mapper;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +23,7 @@ import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PropostasService {
@@ -23,6 +31,7 @@ public class PropostasService {
     private final PropostaRepository propostaRepository;
     private final FuncionariosClient funcionariosClient;
     private final VotacaoRepository votacaoRepository;
+    private final KafkaTemplate<String, PropostaResponseDto> kafkaTemplate;
 
     @Transactional
     public Proposta criar(Proposta proposta) {
@@ -45,6 +54,7 @@ public class PropostasService {
             public void run() {
                 proposta.setAtivo(false);
                 propostaRepository.save(proposta);
+                enviarMensagem(PropostaMapper.paraDto(proposta));
             }
         }, dto.getTempo() * 60000L);
 
@@ -85,5 +95,17 @@ public class PropostasService {
         }
 
         return propostaRepository.save(proposta);
+    }
+
+    public void enviarMensagem(PropostaResponseDto dto) {
+        kafkaTemplate.send("Resultado", dto).whenComplete((result, e) -> {
+            if (e == null) {
+                log.info("Mensagem enviada com sucesso: {}", result.getProducerRecord().value());
+                log.info("Partição: {}", result.getRecordMetadata().partition());
+                log.info("Offset: {}", result.getRecordMetadata().offset());
+            } else {
+                log.error("Erro no envio de mensagem", e);
+            }
+        });
     }
 }
