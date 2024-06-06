@@ -60,7 +60,7 @@ public class PropostasService {
             public void run() {
                 proposta.setAtivo(false);
                 propostaRepository.save(proposta);
-                enviarMensagem(PropostaMapper.paraDto(proposta));
+                enviarMensagem(PropostaMapper.paraDto(proposta,funcionario));
             }
         }, dto.getTempo() * 60000L);
 
