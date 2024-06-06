@@ -24,19 +24,19 @@ public class PropostaController {
     public ResponseEntity<PropostaResponseDto> criar(@RequestBody PropostaCreateDto dto) {
         Proposta proposta = propostaService.criar(PropostaMapper.paraProposta(dto));
         // Usar a instância injetada de PropostaMapper para chamar paraDto
-        return ResponseEntity.status(HttpStatus.CREATED).body(propostaMapper.paraDto(proposta));
+        return ResponseEntity.status(HttpStatus.CREATED).body(PropostaMapper.paraDto(proposta));
     }
 
     @PatchMapping("/iniciar-votacao")
     public ResponseEntity<PropostaResponseDto> iniciarVotacao(@RequestBody VotacaoInitDto dto) {
         Proposta proposta = propostaService.iniciarVotacao(dto);
-        return ResponseEntity.ok(propostaMapper.paraDto(proposta));
+        return ResponseEntity.ok(PropostaMapper.paraDto(proposta));
     }
 
     @PostMapping("/votar")
     public ResponseEntity<PropostaResponseDto> votar(@RequestBody VotacaoDto dto) {
         Proposta proposta = propostaService.votar(dto);
-        return ResponseEntity.ok(propostaMapper.paraDto(proposta));
+        return ResponseEntity.ok(PropostaMapper.paraDto(proposta));
     }
 
 }

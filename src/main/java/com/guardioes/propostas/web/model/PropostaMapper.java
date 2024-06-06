@@ -24,13 +24,13 @@ public class PropostaMapper {
         return proposta;
     }
 
-    public PropostaResponseDto paraDto(Proposta proposta) {
+    public static PropostaResponseDto paraDto(Proposta proposta) {
         PropostaResponseDto dto = new ModelMapper().map(proposta, PropostaResponseDto.class);
 
-        Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(proposta.getFuncionarioCpf());
-        if (funcionario != null) {
-            dto.setNome(funcionario.getNome());
-        }
+//        Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(proposta.getFuncionarioCpf());
+//        if (funcionario != null) {
+//            dto.setNome(funcionario.getNome());
+//        }
 
         return dto;
     }
