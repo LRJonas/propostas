@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.*;
 public class PropostaController {
 
     private final PropostasService propostaService;
+    private final PropostaMapper propostaMapper; // Injetar PropostaMapper
 
     @PostMapping
     public ResponseEntity<PropostaResponseDto> criar(@RequestBody PropostaCreateDto dto) {
         Proposta proposta = propostaService.criar(PropostaMapper.paraProposta(dto));
+        // Usar a instância injetada de PropostaMapper para chamar paraDto
         return ResponseEntity.status(HttpStatus.CREATED).body(PropostaMapper.paraDto(proposta));
     }
 
@@ -32,11 +34,10 @@ public class PropostaController {
     }
 
     @PostMapping("/votar")
-    public ResponseEntity<PropostaResponseDto> Votar(@RequestBody VotacaoDto dto) {
+    public ResponseEntity<PropostaResponseDto> votar(@RequestBody VotacaoDto dto) {
         Proposta proposta = propostaService.votar(dto);
         return ResponseEntity.ok(PropostaMapper.paraDto(proposta));
     }
 
 }
-
 
