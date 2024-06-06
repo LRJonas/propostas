@@ -13,6 +13,8 @@ public class PropostaMapper {
 
     public static PropostaResponseDto paraDto(Proposta proposta) {
         PropostaResponseDto dto = new ModelMapper().map(proposta, PropostaResponseDto.class);
+        dto.setFuncionarioNome("Nome");
+        dto.setFuncionarioCpf("Cpf");
         return dto;
     }
 }

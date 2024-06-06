@@ -16,16 +16,19 @@ public class Votacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "titulo")
+    @Column (name = "titulo")
     private String titulo;
+
+  @Column (name = "ID_PROPOSTA")
+    private Long idProposta;
 
     @Column(name = "funcionario_cpf", nullable = false)
     private String funcionarioCpf;
 
     @Enumerated(EnumType.STRING)
-    private StatusVaga voto;
+    private StatusVoto voto;
 
-    public enum StatusVaga {
+    public enum StatusVoto {
         APROVAR, REJEITAR
     }
 }

@@ -13,5 +13,5 @@ import lombok.Setter;
 public class VotacaoDto {
     private String titulo;
     private String cpf;
-    private Votacao.StatusVaga statusVaga;
+    private Votacao.StatusVoto statusVoto;
 }

@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -68,13 +67,14 @@ public class PropostasService {
 
         Votacao voto = new Votacao();
         voto.setTitulo(dto.getTitulo());
+        voto.setIdProposta(propostaRepository.findByTitulo(dto.getTitulo()).get().getId());
         voto.setFuncionarioCpf(dto.getCpf());
-        voto.setVoto(dto.getStatusVaga());
+        voto.setVoto(dto.getStatusVoto());
         votacaoRepository.save(voto);
 
-        if (dto.getStatusVaga() == Votacao.StatusVaga.APROVAR) {
+        if (dto.getStatusVoto() == Votacao.StatusVoto.APROVAR) {
             proposta.setAprovar(proposta.getAprovar() + 1);
-        } else if (dto.getStatusVaga() == Votacao.StatusVaga.REJEITAR) {
+        } else if (dto.getStatusVoto() == Votacao.StatusVoto.REJEITAR) {
             proposta.setRejeitar(proposta.getRejeitar() + 1);
         } else {
             throw new RuntimeException("Invalid vote type");
