@@ -4,10 +4,7 @@ import com.guardioes.propostas.client.funcionarios.Funcionario;
 import com.guardioes.propostas.client.funcionarios.FuncionariosClient;
 import com.guardioes.propostas.entity.Proposta;
 import com.guardioes.propostas.entity.Votacao;
-import com.guardioes.propostas.exception.ExcecaoCpfDuplicado;
-import com.guardioes.propostas.exception.ExcecaoFuncionarioInvalido;
-import com.guardioes.propostas.exception.ExcecaoPropostaInexistente;
-import com.guardioes.propostas.exception.ExcecaoVotoInvalido;
+import com.guardioes.propostas.exception.*;
 import com.guardioes.propostas.repository.PropostaRepository;
 import com.guardioes.propostas.repository.VotacaoRepository;
 import com.guardioes.propostas.web.dto.VotacaoDto;
@@ -66,7 +63,7 @@ public class PropostasService {
                 .orElseThrow(() -> new ExcecaoPropostaInexistente("Proposta não encontrada"));
 
         if (!proposta.isAtivo()) {
-            throw new RuntimeException("A proposta não está ativa para votação");
+            throw new ExcecaoPropostaInativa("A proposta não está ativa para votação");
         }
 
         Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(dto.getCpf());
