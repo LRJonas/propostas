@@ -37,6 +37,11 @@ public class PropostasService {
         Proposta proposta = propostaRepository.findByTitulo(dto.getPropostaTitulo())
                 .orElseThrow(() -> new RuntimeException("Proposta not found"));
 
+        Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(dto.getFuncionarioCpf());
+        if (funcionario == null) {
+            throw new RuntimeException("Funcionário não encontrado");
+        }
+
         proposta.setAtivo(true);
         proposta.setTempo(dto.getTempo());
         Timer timer = new Timer();
