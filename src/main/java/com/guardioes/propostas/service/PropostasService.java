@@ -43,6 +43,7 @@ public class PropostasService {
         return propostaRepository.save(proposta);
     }
 
+    @Transactional
     public Proposta iniciarVotacao(VotacaoInitDto dto) {
         Proposta proposta = propostaRepository.findByTitulo(dto.getPropostaTitulo())
                 .orElseThrow(() -> new ExcecaoPropostaInexistente("Proposta não encontrada"));
@@ -58,9 +59,15 @@ public class PropostasService {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                proposta.setAtivo(false);
-                propostaRepository.save(proposta);
-                enviarMensagem(PropostaMapper.paraDto(proposta,funcionario));
+                Proposta propostaKafka = propostaRepository.findByTitulo(dto.getPropostaTitulo())
+                        .orElseThrow(() -> new ExcecaoPropostaInexistente("Proposta não encontrada"));
+                propostaKafka.setAtivo(false);
+                propostaRepository.save(propostaKafka);
+                enviarMensagem(PropostaMapper.paraDto(
+                        propostaRepository.findByTitulo(dto.getPropostaTitulo())
+                            .orElseThrow(() -> new ExcecaoPropostaInexistente("Proposta não encontrada")),
+                        funcionariosClient.getFuncionarioByCpf(propostaKafka.getFuncionarioCpf())
+                ));
             }
         }, dto.getTempo() * 60000L);
 
