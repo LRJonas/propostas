@@ -12,8 +12,11 @@ import lombok.Setter;
 public class PropostaResponseDto {
     private String titulo;
     private String descricao;
+    private String nome;
+    private String funcionarioCpf;
     private int aprovar;
     private int rejeitar;
     private int tempo;
     private boolean ativo;
+
 }

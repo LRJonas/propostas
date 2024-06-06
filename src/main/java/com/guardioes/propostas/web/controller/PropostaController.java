@@ -18,25 +18,26 @@ import org.springframework.web.bind.annotation.*;
 public class PropostaController {
 
     private final PropostasService propostaService;
+    private final PropostaMapper propostaMapper; // Injetar PropostaMapper
 
     @PostMapping
     public ResponseEntity<PropostaResponseDto> criar(@RequestBody PropostaCreateDto dto) {
         Proposta proposta = propostaService.criar(PropostaMapper.paraProposta(dto));
-        return ResponseEntity.status(HttpStatus.CREATED).body(PropostaMapper.paraDto(proposta));
+        // Usar a instância injetada de PropostaMapper para chamar paraDto
+        return ResponseEntity.status(HttpStatus.CREATED).body(propostaMapper.paraDto(proposta));
     }
 
     @PatchMapping("/iniciar-votacao")
     public ResponseEntity<PropostaResponseDto> iniciarVotacao(@RequestBody VotacaoInitDto dto) {
         Proposta proposta = propostaService.iniciarVotacao(dto);
-        return ResponseEntity.ok(PropostaMapper.paraDto(proposta));
+        return ResponseEntity.ok(propostaMapper.paraDto(proposta));
     }
 
     @PostMapping("/votar")
-    public ResponseEntity<PropostaResponseDto> Votar(@RequestBody VotacaoDto dto) {
+    public ResponseEntity<PropostaResponseDto> votar(@RequestBody VotacaoDto dto) {
         Proposta proposta = propostaService.votar(dto);
-        return ResponseEntity.ok(PropostaMapper.paraDto(proposta));
+        return ResponseEntity.ok(propostaMapper.paraDto(proposta));
     }
 
 }
-
 
