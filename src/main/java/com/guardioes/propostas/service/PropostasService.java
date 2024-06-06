@@ -7,6 +7,7 @@ import com.guardioes.propostas.entity.Votacao;
 import com.guardioes.propostas.exception.ExcecaoCpfDuplicado;
 import com.guardioes.propostas.exception.ExcecaoFuncionarioInvalido;
 import com.guardioes.propostas.exception.ExcecaoPropostaInexistente;
+import com.guardioes.propostas.exception.ExcecaoVotoInvalido;
 import com.guardioes.propostas.repository.PropostaRepository;
 import com.guardioes.propostas.repository.VotacaoRepository;
 import com.guardioes.propostas.web.dto.VotacaoDto;
@@ -89,7 +90,7 @@ public class PropostasService {
         } else if (dto.getStatusVaga() == Votacao.StatusVaga.REJEITAR) {
             proposta.setRejeitar(proposta.getRejeitar() + 1);
         } else {
-            throw new RuntimeException("Invalid vote type");
+            throw new ExcecaoVotoInvalido("Invalid vote type");
         }
 
         return propostaRepository.save(proposta);
