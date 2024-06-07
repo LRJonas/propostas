@@ -9,6 +9,7 @@ import com.guardioes.propostas.web.dto.PropostaResponseDto;
 import com.guardioes.propostas.web.dto.VotacaoDto;
 import com.guardioes.propostas.web.dto.VotacaoInitDto;
 import com.guardioes.propostas.web.model.PropostaMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class PropostaController {
     private final FuncionariosClient funcionariosClient;
 
     @PostMapping
-    public ResponseEntity<PropostaResponseDto> criar(@RequestBody PropostaCreateDto dto) {
+    public ResponseEntity<PropostaResponseDto> criar(@RequestBody @Valid PropostaCreateDto dto) {
         Proposta proposta = propostaService.criar(PropostaMapper.paraProposta(dto));
         Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(proposta.getFuncionarioCpf());
         return ResponseEntity.status(HttpStatus.CREATED).body(PropostaMapper.paraDto(proposta,funcionario));
