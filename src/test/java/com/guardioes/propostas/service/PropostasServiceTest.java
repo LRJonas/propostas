@@ -3,8 +3,11 @@ package com.guardioes.propostas.service;
 import com.guardioes.propostas.client.funcionarios.Funcionario;
 import com.guardioes.propostas.client.funcionarios.FuncionariosClient;
 import com.guardioes.propostas.entity.Proposta;
+import com.guardioes.propostas.entity.Votacao;
 import com.guardioes.propostas.exception.ExcecaoFuncionarioInvalido;
 import com.guardioes.propostas.repository.PropostaRepository;
+import com.guardioes.propostas.repository.VotacaoRepository;
+import com.guardioes.propostas.web.dto.VotacaoDto;
 import com.guardioes.propostas.web.dto.VotacaoInitDto;
 import feign.FeignException;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +26,8 @@ public class PropostasServiceTest {
 
     @Mock
     private PropostaRepository propostaRepository;
+    @Mock
+    private VotacaoRepository votacaoRepository;
     @Mock
     private FuncionariosClient funcionariosClient;
     @InjectMocks
@@ -66,6 +71,23 @@ public class PropostasServiceTest {
         when(propostaRepository.save(any(Proposta.class))).thenReturn(proposta);
         Proposta resultado = propostasService.iniciarVotacao(dto);
         assertTrue(resultado.isAtivo());
+        verify(propostaRepository, times(1)).save(proposta);
+    }
+
+    @Test
+    public void testeVotarSucesso() {
+        Proposta proposta = new Proposta();
+        proposta.setTitulo("Teste");
+        proposta.setFuncionarioCpf("00000000000");
+        proposta.setAtivo(true);
+        VotacaoDto dto = new VotacaoDto("Teste", "00000000000", Votacao.Voto.APROVAR);
+
+        when(propostaRepository.findByTitulo(anyString())).thenReturn(Optional.of(proposta));
+        when(funcionariosClient.getFuncionarioByCpf(anyString())).thenReturn(new Funcionario());
+        when(votacaoRepository.existsByTituloAndFuncionarioCpf(anyString(), anyString())).thenReturn(false);
+        when(propostaRepository.save(any(Proposta.class))).thenReturn(proposta);
+        Proposta resultado = propostasService.votar(dto);
+        assertEquals(1, resultado.getAprovar());
         verify(propostaRepository, times(1)).save(proposta);
     }
 
