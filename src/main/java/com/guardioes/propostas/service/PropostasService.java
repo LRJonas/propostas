@@ -1,7 +1,5 @@
 package com.guardioes.propostas.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guardioes.propostas.client.funcionarios.Funcionario;
 import com.guardioes.propostas.client.funcionarios.FuncionariosClient;
 import com.guardioes.propostas.entity.Proposta;
@@ -20,8 +18,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.net.ConnectException;
 import java.util.Timer;
 import java.util.TimerTask;
 
