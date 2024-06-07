@@ -1,4 +1,5 @@
 package com.guardioes.propostas.integracao;
+import com.guardioes.propostas.entity.Proposta;
 import com.guardioes.propostas.repository.PropostaRepository;
 import com.guardioes.propostas.repository.VotacaoRepository;
 import com.guardioes.propostas.web.dto.PropostaCreateDto;
@@ -25,7 +26,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class TestesDeIntegracao{
+public class TestesDeIntegracao {
 
     @Autowired
     private MockMvc mockMvc;
@@ -46,10 +47,10 @@ public class TestesDeIntegracao{
     }
 
     @Test
-    public void testCriarProposta_Sucesso() throws Exception {
+    public void testeCriarPropostaSucesso() throws Exception {
         PropostaCreateDto propostaDto = new PropostaCreateDto();
-        propostaDto.setTitulo("Título da Proposta");
-        propostaDto.setDescricao("Descrição da Proposta");
+        propostaDto.setTitulo("teste");
+        propostaDto.setDescricao("teste");
         propostaDto.setFuncionarioCpf("12345678900");
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -62,6 +63,39 @@ public class TestesDeIntegracao{
 
     }
 
+    @Test
+    public void testeIniciarVotacaoSucesso() throws Exception {
+        PropostaCreateDto propostaDto = new PropostaCreateDto();
+        propostaDto.setTitulo("teste");
+        propostaDto.setDescricao("teste");
+        propostaDto.setFuncionarioCpf("12345678900");
 
+        mockMvc.perform(post("/api/v1/propostas")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(propostaDto)))
+                .andExpect(status().isCreated());
+        VotacaoInitDto votacaoInitDto = new VotacaoInitDto("teste", "12345678900", 1);
+        String jsonRequest = objectMapper.writeValueAsString(votacaoInitDto);
 
+        mockMvc.perform(patch("/api/v1/propostas/iniciar-votacao")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testeVotarSucesso() throws Exception {
+        Proposta proposta = new Proposta();
+        proposta.setTitulo("teste");
+        proposta.setDescricao("teste");
+        proposta.setFuncionarioCpf("12345678900");
+        proposta.setAtivo(true);
+        propostaRepository.save(proposta);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/propostas/votar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"titulo\":\"teste\",\"cpf\":\"12345678900\",\"voto\":\"APROVAR\"}"))
+                .andExpect(status().isOk());
+
+    }
 }
