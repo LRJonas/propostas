@@ -23,9 +23,9 @@ public class Votacao {
     private String funcionarioCpf;
 
     @Enumerated(EnumType.STRING)
-    private StatusVaga voto;
+    private Voto voto;
 
-    public enum StatusVaga {
+    public enum Voto {
         APROVAR, REJEITAR
     }
 }
