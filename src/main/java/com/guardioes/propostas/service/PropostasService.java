@@ -38,6 +38,11 @@ public class PropostasService {
         } catch (FeignException.NotFound e) {
             throw new ExcecaoFuncionarioInvalido(e.getMessage());
         }
+
+        if (propostaRepository.existsByTitulo(proposta.getTitulo())) {
+            throw new ExcecaoPropostaDuplicada("Esta proposta já foi criada");
+        }
+
         return propostaRepository.save(proposta);
     }
 
