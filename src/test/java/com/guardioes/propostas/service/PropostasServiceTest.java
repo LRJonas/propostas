@@ -5,6 +5,7 @@ import com.guardioes.propostas.client.funcionarios.FuncionariosClient;
 import com.guardioes.propostas.entity.Proposta;
 import com.guardioes.propostas.entity.Votacao;
 import com.guardioes.propostas.exception.ExcecaoFuncionarioInvalido;
+import com.guardioes.propostas.exception.ExcecaoPropostaInexistente;
 import com.guardioes.propostas.repository.PropostaRepository;
 import com.guardioes.propostas.repository.VotacaoRepository;
 import com.guardioes.propostas.web.dto.VotacaoDto;
@@ -75,6 +76,13 @@ public class PropostasServiceTest {
     }
 
     @Test
+    public void testeIniciarVotacaoPropostaInvalida() {
+        VotacaoInitDto dto = new VotacaoInitDto("Proposta Inexistente", "12345678901", 1);
+        when(propostaRepository.findByTitulo(anyString())).thenReturn(Optional.empty());
+        assertThrows(ExcecaoPropostaInexistente.class, () -> propostasService.iniciarVotacao(dto));
+    }
+
+    @Test
     public void testeVotarSucesso() {
         Proposta proposta = new Proposta();
         proposta.setTitulo("Teste");
@@ -90,6 +98,5 @@ public class PropostasServiceTest {
         assertEquals(1, resultado.getAprovar());
         verify(propostaRepository, times(1)).save(proposta);
     }
-
 
 }
