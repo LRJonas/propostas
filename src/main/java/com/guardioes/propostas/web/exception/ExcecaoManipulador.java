@@ -32,6 +32,15 @@ public class ExcecaoManipulador extends ResponseEntityExceptionHandler {
                 .body(new MensagemErro(request, HttpStatus.NOT_FOUND, ex.getMessage()));
     }
 
+    @ExceptionHandler(ExcecaoPropostaDuplicada.class)
+    public final ResponseEntity<MensagemErro> excecaoPropostaDuplicada(ExcecaoPropostaDuplicada ex, HttpServletRequest request) {
+        log.error("Erro na API", ex);
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new MensagemErro(request, HttpStatus.CONFLICT, ex.getMessage()));
+    }
+
 
     @ExceptionHandler(ExcecaoFuncionarioInvalido.class)
     public final ResponseEntity<MensagemErro> excecaoFuncionarioInvalido(ExcecaoFuncionarioInvalido ex, HttpServletRequest request) {
@@ -60,5 +69,14 @@ public class ExcecaoManipulador extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new MensagemErro(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
+    @ExceptionHandler(ExcecaoVotacaoIniciada.class)
+    public final ResponseEntity<MensagemErro> ExcecaoVotacaoIniciada(ExcecaoVotacaoIniciada ex, HttpServletRequest request) {
+        log.error("Erro na API", ex);
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new MensagemErro(request, HttpStatus.CONFLICT, ex.getMessage()));
     }
 }

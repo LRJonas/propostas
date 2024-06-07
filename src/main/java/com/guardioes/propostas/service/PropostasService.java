@@ -38,6 +38,11 @@ public class PropostasService {
         } catch (FeignException.NotFound e) {
             throw new ExcecaoFuncionarioInvalido(e.getMessage());
         }
+
+        if (propostaRepository.existsByTitulo(proposta.getTitulo())) {
+            throw new ExcecaoPropostaDuplicada("Esta proposta já foi criada");
+        }
+
         return propostaRepository.save(proposta);
     }
 
@@ -50,6 +55,10 @@ public class PropostasService {
             Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(dto.getFuncionarioCpf());
         } catch (FeignException.NotFound e) {
             throw new ExcecaoFuncionarioInvalido(e.getMessage());
+        }
+
+        if (propostaRepository.findByTitulo(dto.getPropostaTitulo()).get().isAtivo()) {
+            throw new ExcecaoVotacaoIniciada("Esta proposta já está com a votação em andamento");
         }
 
         proposta.setAtivo(true);
