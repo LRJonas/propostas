@@ -13,6 +13,7 @@ import com.guardioes.propostas.web.dto.PropostaResponseDto;
 import com.guardioes.propostas.web.dto.VotacaoDto;
 import com.guardioes.propostas.web.dto.VotacaoInitDto;
 import com.guardioes.propostas.web.model.PropostaMapper;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.net.ConnectException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -35,9 +37,10 @@ public class PropostasService {
 
     @Transactional
     public Proposta criar(Proposta proposta) {
-        Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(proposta.getFuncionarioCpf());
-        if (funcionario == null) {
-            throw new ExcecaoFuncionarioInvalido("Funcionário não encontrado");
+        try {
+            Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(proposta.getFuncionarioCpf());
+        } catch (FeignException.NotFound e) {
+            throw new ExcecaoFuncionarioInvalido(e.getMessage());
         }
         return propostaRepository.save(proposta);
     }
@@ -47,9 +50,10 @@ public class PropostasService {
         Proposta proposta = propostaRepository.findByTitulo(dto.getPropostaTitulo())
                 .orElseThrow(() -> new ExcecaoPropostaInexistente("Proposta não encontrada"));
 
-        Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(dto.getFuncionarioCpf());
-        if (funcionario == null) {
-            throw new ExcecaoFuncionarioInvalido("Funcionário não encontrado");
+        try {
+            Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(dto.getFuncionarioCpf());
+        } catch (FeignException.NotFound e) {
+            throw new ExcecaoFuncionarioInvalido(e.getMessage());
         }
 
         proposta.setAtivo(true);
@@ -82,9 +86,10 @@ public class PropostasService {
             throw new ExcecaoPropostaInativa("A proposta não está ativa para votação");
         }
 
-        Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(dto.getCpf());
-        if (funcionario == null) {
-            throw new ExcecaoFuncionarioInvalido("Funcionário não encontrado");
+        try {
+            Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(dto.getCpf());
+        } catch (FeignException.NotFound e) {
+            throw new ExcecaoFuncionarioInvalido(e.getMessage());
         }
 
         boolean cpfJaVotou = votacaoRepository.existsByTituloAndFuncionarioCpf(dto.getTitulo(),dto.getCpf());

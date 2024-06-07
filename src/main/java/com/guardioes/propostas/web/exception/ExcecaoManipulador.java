@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.net.ConnectException;
+
 @Slf4j
 @RestControllerAdvice
 public class ExcecaoManipulador extends ResponseEntityExceptionHandler {
@@ -33,14 +35,14 @@ public class ExcecaoManipulador extends ResponseEntityExceptionHandler {
     }
 
 
-//    @ExceptionHandler(ExcecaoFuncionarioInvalido.class)
-//    public final ResponseEntity<MensagemErro> excecaoFuncionarioInvalido(ExcecaoFuncionarioInvalido ex, HttpServletRequest request) {
-//        log.error("Erro na API", ex);
-//        return ResponseEntity
-//                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .body(new MensagemErro(request, HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()));
-//    }
+    @ExceptionHandler(ExcecaoFuncionarioInvalido.class)
+    public final ResponseEntity<MensagemErro> excecaoFuncionarioInvalido(ExcecaoFuncionarioInvalido ex, HttpServletRequest request) {
+        log.error("Erro na API", ex);
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new MensagemErro(request, HttpStatus.NOT_FOUND, ex.getMessage()));
+    }
 
 
     @ExceptionHandler(ExcecaoPropostaInativa.class)
