@@ -31,17 +31,15 @@ public class PropostaController {
 
     @PatchMapping("/iniciar-votacao")
     public ResponseEntity<PropostaResponseDto> iniciarVotacao(@RequestBody VotacaoInitDto dto) {
-        Proposta proposta = propostaService.iniciarVotacao(dto);
-        Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(proposta.getFuncionarioCpf());
-        return ResponseEntity.ok(PropostaMapper.paraDto(proposta,funcionario));
+        propostaService.iniciarVotacao(dto);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/votar")
     public ResponseEntity<PropostaResponseDto> votar(@RequestBody VotacaoDto dto) {
         Proposta proposta = propostaService.votar(dto);
         Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(proposta.getFuncionarioCpf());
-        return ResponseEntity.ok(PropostaMapper.paraDto(proposta,funcionario));
+        return ResponseEntity.status(HttpStatus.CREATED).body(PropostaMapper.paraDto(proposta,funcionario));
     }
-
 }
 
