@@ -4,6 +4,7 @@ import com.guardioes.propostas.client.funcionarios.Funcionario;
 import com.guardioes.propostas.client.funcionarios.FuncionariosClient;
 import com.guardioes.propostas.entity.Proposta;
 import com.guardioes.propostas.entity.Votacao;
+import com.guardioes.propostas.exception.ExcecaoCpfDuplicado;
 import com.guardioes.propostas.exception.ExcecaoFuncionarioInvalido;
 import com.guardioes.propostas.exception.ExcecaoPropostaInativa;
 import com.guardioes.propostas.exception.ExcecaoPropostaInexistente;
@@ -135,6 +136,21 @@ public class PropostasServiceTest {
         when(funcionariosClient.getFuncionarioByCpf(anyString())).thenThrow(FeignException.NotFound.class);
         assertThrows(ExcecaoFuncionarioInvalido.class, () -> propostasService.votar(dto));
     }
+
+    @Test
+    public void testeVotarCpfDuplicado() {
+        Proposta proposta = new Proposta();
+        proposta.setTitulo("Teste");
+        proposta.setFuncionarioCpf("00000000000");
+        proposta.setAtivo(true);
+
+        VotacaoDto dto = new VotacaoDto("Teste", "00000000000", Votacao.Voto.APROVAR);
+        when(propostaRepository.findByTitulo(anyString())).thenReturn(Optional.of(proposta));
+        when(funcionariosClient.getFuncionarioByCpf(anyString())).thenReturn(new Funcionario());
+        when(votacaoRepository.existsByTituloAndFuncionarioCpf(anyString(), anyString())).thenReturn(true);
+        assertThrows(ExcecaoCpfDuplicado.class, () -> propostasService.votar(dto));
+    }
+
 
 
 }
