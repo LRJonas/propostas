@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.net.ConnectException;
+
 @Slf4j
 @RestControllerAdvice
 public class ExcecaoManipulador extends ResponseEntityExceptionHandler {
@@ -78,5 +80,14 @@ public class ExcecaoManipulador extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new MensagemErro(request, HttpStatus.CONFLICT, ex.getMessage()));
+    }
+
+    @ExceptionHandler(ExcecaoConexao.class)
+    public final ResponseEntity<MensagemErro> ExcecaoConexao(ExcecaoConexao ex, HttpServletRequest request) {
+        log.error("Erro na API", ex);
+        return ResponseEntity
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new MensagemErro(request, HttpStatus.SERVICE_UNAVAILABLE, ex.getMessage()));
     }
 }

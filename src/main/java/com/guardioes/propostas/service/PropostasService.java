@@ -18,6 +18,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.ConnectException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -37,6 +38,8 @@ public class PropostasService {
             Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(proposta.getFuncionarioCpf());
         } catch (FeignException.NotFound e) {
             throw new ExcecaoFuncionarioInvalido(e.getMessage());
+        } catch (FeignException.ServiceUnavailable e) {
+            throw new ExcecaoConexao(e.getMessage());
         }
 
         if (propostaRepository.existsByTitulo(proposta.getTitulo())) {
