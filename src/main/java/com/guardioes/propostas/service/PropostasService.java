@@ -133,4 +133,10 @@ public class PropostasService {
             }
         });
     }
+
+    @Transactional(readOnly = true)
+    public Proposta buscar(String propostaTitulo) {
+        return propostaRepository.findByTitulo(propostaTitulo)
+                .orElseThrow(() -> new ExcecaoPropostaInexistente("Proposta não encontrada"));
+    }
 }

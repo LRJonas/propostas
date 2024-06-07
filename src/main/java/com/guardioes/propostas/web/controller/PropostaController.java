@@ -41,5 +41,12 @@ public class PropostaController {
         Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(proposta.getFuncionarioCpf());
         return ResponseEntity.status(HttpStatus.CREATED).body(PropostaMapper.paraDto(proposta,funcionario));
     }
+
+    @GetMapping("/{propostaTitulo}")
+    public ResponseEntity<PropostaResponseDto> buscarProposta(@PathVariable String propostaTitulo) {
+        Proposta proposta = propostaService.buscar(propostaTitulo);
+        Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(proposta.getFuncionarioCpf());
+        return ResponseEntity.ok(PropostaMapper.paraDto(proposta,funcionario));
+    }
 }
 
