@@ -6,13 +6,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @Slf4j
 @RestControllerAdvice
-public class ExcecaoManipulador extends ResponseEntityExceptionHandler {
+public class ExcecaoManipulador {
     @ExceptionHandler(ExcecaoCpfDuplicado.class)
     public final ResponseEntity<MensagemErro> excecaoCpfDuplicado(ExcecaoCpfDuplicado ex, HttpServletRequest request) {
         log.error("Erro na API", ex);
@@ -21,7 +23,6 @@ public class ExcecaoManipulador extends ResponseEntityExceptionHandler {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new MensagemErro(request, HttpStatus.CONFLICT, ex.getMessage()));
     }
-
 
     @ExceptionHandler(ExcecaoPropostaInexistente.class)
     public final ResponseEntity<MensagemErro> excecaoPropostaInexistente(ExcecaoPropostaInexistente ex, HttpServletRequest request) {
@@ -78,6 +79,17 @@ public class ExcecaoManipulador extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new MensagemErro(request, HttpStatus.CONFLICT, ex.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<MensagemErro> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpServletRequest request) {
+        log.error("Erro na API", ex);
+
+        MensagemErro mensagemErro = new MensagemErro(request, HttpStatus.BAD_REQUEST, "Invalid request content.", ex.getBindingResult());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(mensagemErro);
     }
 
     @ExceptionHandler(ExcecaoConexao.class)

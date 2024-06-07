@@ -15,7 +15,7 @@ public class ExcecoesDecodificador implements ErrorDecoder {
     public Exception decode(String method, Response response) {
         log.info("Decodificador de exceção: {}, {}", method, response);
 
-        if(response.status() == 503) {
+        if(response.status() == 500 || response.status() == 503) {
             return new ExcecaoConexao("API Funcionários não disponível");
         }
 
