@@ -113,7 +113,7 @@ public class PropostasService {
     public void enviarMensagem(PropostaResponseDto dto) {
         kafkaTemplate.send("Resultado", dto).whenComplete((result, e) -> {
             if (e == null) {
-                log.info("Mensagem enviada com sucesso: {}", result.getProducerRecord().value());
+                log.info("Mensagem enviada com sucesso: {}", result.getProducerRecord().value().getTitulo());
                 log.info("Partição: {}", result.getRecordMetadata().partition());
                 log.info("Offset: {}", result.getRecordMetadata().offset());
             } else {
