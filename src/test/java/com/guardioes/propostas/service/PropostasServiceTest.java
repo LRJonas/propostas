@@ -123,4 +123,18 @@ public class PropostasServiceTest {
         assertThrows(ExcecaoPropostaInativa.class, () -> propostasService.votar(dto));
     }
 
+    @Test
+    public void testeVotarFuncionarioInvalido() {
+        Proposta proposta = new Proposta();
+        proposta.setTitulo("Teste");
+        proposta.setFuncionarioCpf("99999999999");
+        proposta.setAtivo(true);
+
+        VotacaoDto dto = new VotacaoDto("Teste", "99999999999", Votacao.Voto.APROVAR);
+        when(propostaRepository.findByTitulo(anyString())).thenReturn(Optional.of(proposta));
+        when(funcionariosClient.getFuncionarioByCpf(anyString())).thenThrow(FeignException.NotFound.class);
+        assertThrows(ExcecaoFuncionarioInvalido.class, () -> propostasService.votar(dto));
+    }
+
+
 }
