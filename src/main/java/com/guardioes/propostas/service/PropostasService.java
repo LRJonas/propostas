@@ -96,12 +96,12 @@ public class PropostasService {
         Votacao voto = new Votacao();
         voto.setTitulo(dto.getTitulo());
         voto.setFuncionarioCpf(dto.getCpf());
-        voto.setVoto(dto.getStatusVaga());
+        voto.setVoto(dto.getVoto());
         votacaoRepository.save(voto);
 
-        if (dto.getStatusVaga() == Votacao.StatusVaga.APROVAR) {
+        if (dto.getVoto() == Votacao.Voto.APROVAR) {
             proposta.setAprovar(proposta.getAprovar() + 1);
-        } else if (dto.getStatusVaga() == Votacao.StatusVaga.REJEITAR) {
+        } else if (dto.getVoto() == Votacao.Voto.REJEITAR) {
             proposta.setRejeitar(proposta.getRejeitar() + 1);
         } else {
             throw new ExcecaoVotoInvalido("Invalid vote type");
