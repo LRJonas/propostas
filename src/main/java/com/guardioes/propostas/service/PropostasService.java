@@ -57,6 +57,10 @@ public class PropostasService {
             throw new ExcecaoFuncionarioInvalido(e.getMessage());
         }
 
+        if (propostaRepository.findByTitulo(dto.getPropostaTitulo()).get().isAtivo()) {
+            throw new ExcecaoVotacaoIniciada("Esta proposta já está com a votação em andamento");
+        }
+
         proposta.setAtivo(true);
         proposta.setTempo(dto.getTempo());
         Timer timer = new Timer();
