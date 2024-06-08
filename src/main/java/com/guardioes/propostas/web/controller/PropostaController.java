@@ -31,7 +31,7 @@ public class PropostaController {
     }
 
     @PatchMapping("/iniciar-votacao")
-    public ResponseEntity<PropostaResponseDto> iniciarVotacao(@RequestBody VotacaoInitDto dto) {
+    public ResponseEntity<PropostaResponseDto> iniciarVotacao(@RequestBody @Valid VotacaoInitDto dto) {
         propostaService.iniciarVotacao(dto);
         return ResponseEntity.noContent().build();
     }
