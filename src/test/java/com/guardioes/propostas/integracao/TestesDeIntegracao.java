@@ -2,6 +2,9 @@ package com.guardioes.propostas.integracao;
 import com.guardioes.propostas.client.funcionarios.Funcionario;
 import com.guardioes.propostas.client.funcionarios.FuncionariosClient;
 import com.guardioes.propostas.entity.Proposta;
+import com.guardioes.propostas.exception.ExcecaoConexao;
+import com.guardioes.propostas.exception.ExcecaoCpfDuplicado;
+import com.guardioes.propostas.exception.ExcecaoFuncionarioInvalido;
 import com.guardioes.propostas.repository.PropostaRepository;
 import com.guardioes.propostas.repository.VotacaoRepository;
 import com.guardioes.propostas.web.dto.PropostaCreateDto;
@@ -75,7 +78,52 @@ public class TestesDeIntegracao {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(propostaJson));
         result.andExpect(status().isCreated());
+    }
 
+    @Test
+    public void testeCriarPropostaExcecaoDadosInvalidos() throws Exception {
+        Funcionario funcionarioMock = new Funcionario();
+        funcionarioMock.setCpf("467990550600");
+        funcionarioMock.setNome("funcionario teste");
+        funcionarioMock.setAtivo(true);
+
+        when(funcionariosClient.getFuncionarioByCpf(anyString())).thenThrow(ExcecaoFuncionarioInvalido.class);
+
+        PropostaCreateDto propostaDto = new PropostaCreateDto();
+        propostaDto.setTitulo("teste");
+        propostaDto.setDescricao("teste");
+        propostaDto.setFuncionarioCpf("46799055060");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String propostaJson = objectMapper.writeValueAsString(propostaDto);
+
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/propostas")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(propostaJson));
+        result.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testeCriarPropostaExcecaoConexao() throws Exception {
+        Funcionario funcionarioMock = new Funcionario();
+        funcionarioMock.setCpf("52493738012");
+        funcionarioMock.setNome("funcionario teste");
+        funcionarioMock.setAtivo(true);
+
+        when(funcionariosClient.getFuncionarioByCpf(anyString())).thenThrow(ExcecaoConexao.class);
+
+        PropostaCreateDto propostaDto = new PropostaCreateDto();
+        propostaDto.setTitulo("teste");
+        propostaDto.setDescricao("teste");
+        propostaDto.setFuncionarioCpf("52493738012");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String propostaJson = objectMapper.writeValueAsString(propostaDto);
+
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/propostas")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(propostaJson));
+        result.andExpect(status().isServiceUnavailable());
     }
 
     @Test
