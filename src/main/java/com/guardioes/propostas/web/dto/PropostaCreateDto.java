@@ -14,12 +14,14 @@ import org.hibernate.validator.constraints.br.CPF;
 @AllArgsConstructor
 public class PropostaCreateDto {
     @NotBlank(message = "O título é obrigatório.")
+    @Size(min = 5, max = 200, message = "O título deve ter no mínimo 5 caracteres e no máximo 200 caracteres")
     private String titulo;
 
     @NotBlank(message = "A descrição é obrigatória.")
+    @Size(min = 5, max = 500, message = "A descrição deve ter no mínimo 5 caracteres e no máximo 500 caracteres")
     private String descricao;
 
-    @NotBlank
+    @NotBlank(message = "O CPF é obrigatório.")
     @CPF(message = "O CPF do funcionário é inválido.")
     @Size(min = 11, max = 11, message = "O CPF do funcionário deve ter exatamente 11 caracteres.")
     private String funcionarioCpf;
