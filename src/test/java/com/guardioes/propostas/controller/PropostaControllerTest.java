@@ -90,4 +90,22 @@ public class PropostaControllerTest {
         assertEquals(1, resposta.getBody().getAprovar());
     }
 
+    @Test
+    public void testeBuscarProposta() {
+        VotacaoDto dto = new VotacaoDto("AA", "12345678900", Votacao.Voto.APROVAR);
+        Proposta proposta = new Proposta();
+        proposta.setTitulo("AA");
+        proposta.setFuncionarioCpf("12345678900");
+        proposta.setAprovar(1);
+
+        Funcionario funcionario = new Funcionario();
+
+        when(propostaService.buscar(any(String.class))).thenReturn(proposta);
+        when(funcionariosClient.getFuncionarioByCpf(anyString())).thenReturn(funcionario);
+        ResponseEntity<PropostaResponseDto> resposta = propostaController.buscarProposta("AA");
+        assertEquals(HttpStatus.OK, resposta.getStatusCode());
+        assertNotNull(resposta.getBody());
+        assertEquals("AA", resposta.getBody().getTitulo());
+    }
+
 }
