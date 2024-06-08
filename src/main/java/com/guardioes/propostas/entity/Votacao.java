@@ -19,7 +19,7 @@ public class Votacao {
     @JoinColumn(name = "titulo")
     private String titulo;
 
-    @Column(name = "funcionario_cpf", nullable = false)
+    @Column(name = "funcionario_cpf", nullable = false, length = 11)
     private String funcionarioCpf;
 
     @Enumerated(EnumType.STRING)
