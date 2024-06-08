@@ -51,6 +51,17 @@ public class PropostasServiceTest {
     }
 
     @Test
+    public void testeCriarPropostaDuplicada() {
+        Proposta proposta = new Proposta();
+        proposta.setTitulo("Teste");
+        proposta.setFuncionarioCpf("12345678901");
+        proposta.setAtivo(true);
+
+        when(propostaRepository.existsByTitulo(anyString())).thenReturn(true);
+        assertThrows(ExcecaoPropostaDuplicada.class, () -> propostasService.criar(proposta));
+    }
+
+    @Test
     public void testeCriarPropostaFuncionarioInvalido() {
         Proposta proposta = new Proposta();
         proposta.setFuncionarioCpf("12345678901");
@@ -90,6 +101,18 @@ public class PropostasServiceTest {
         when(propostaRepository.findByTitulo(anyString())).thenReturn(Optional.of(proposta));
         when(funcionariosClient.getFuncionarioByCpf(anyString())).thenThrow(FeignException.NotFound.class);
         assertThrows(ExcecaoFuncionarioInvalido.class, () -> propostasService.iniciarVotacao(dto));
+    }
+
+    @Test
+    public void testeIniciarVotacaoIniciada() {
+        Proposta proposta = new Proposta();
+        proposta.setTitulo("Teste");
+        proposta.setFuncionarioCpf("55555555555");
+        proposta.setAtivo(true);
+
+        VotacaoInitDto dto = new VotacaoInitDto("Teste", "55555555555", 1);
+        when(propostaRepository.findByTitulo(anyString())).thenReturn(Optional.of(proposta));
+        assertThrows(ExcecaoVotacaoIniciada.class, () -> propostasService.iniciarVotacao(dto));
     }
 
     @Test
@@ -145,8 +168,13 @@ public class PropostasServiceTest {
         when(propostaRepository.findByTitulo(anyString())).thenReturn(Optional.of(proposta));
         when(funcionariosClient.getFuncionarioByCpf(anyString())).thenReturn(new Funcionario());
         when(votacaoRepository.existsByTituloAndFuncionarioCpf(anyString(), anyString())).thenReturn(true);
-        assertThrows(ExcecaoCpfDuplicado.class, () -> propostasService.votar(dto));
+
+        ExcecaoCpfDuplicado excecao = assertThrows(ExcecaoCpfDuplicado.class, () -> propostasService.votar(dto));
+
+        assertNotNull(excecao.getMessage());
+        assertEquals(excecao.getMessage(), "Este CPF já votou nesta proposta");
     }
+
     @Test
     public void testeVotarVotoInvalido() {
         Proposta proposta = new Proposta();
@@ -161,5 +189,16 @@ public class PropostasServiceTest {
         assertThrows(ExcecaoVotoInvalido.class, () -> propostasService.votar(dto));
     }
 
+    @Test
+    public void testeBuscarPropostaSucesso() {
+        Proposta proposta = new Proposta();
+        proposta.setTitulo("Teste");
+        proposta.setFuncionarioCpf("00000000000");
+        proposta.setAtivo(true);
 
+        when(propostaRepository.findByTitulo(anyString())).thenReturn(Optional.of(proposta));
+        Proposta resultado = propostasService.buscar("Teste");
+        assertNotNull(resultado);
+        verify(propostaRepository, times(1)).findByTitulo("Teste");
+    }
 }
