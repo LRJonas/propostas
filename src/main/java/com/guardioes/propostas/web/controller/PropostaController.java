@@ -37,7 +37,7 @@ public class PropostaController {
     }
 
     @PostMapping("/votar")
-    public ResponseEntity<PropostaResponseDto> votar(@RequestBody VotacaoDto dto) {
+    public ResponseEntity<PropostaResponseDto> votar(@RequestBody @Valid VotacaoDto dto) {
         Proposta proposta = propostaService.votar(dto);
         Funcionario funcionario = funcionariosClient.getFuncionarioByCpf(proposta.getFuncionarioCpf());
         return ResponseEntity.status(HttpStatus.CREATED).body(PropostaMapper.paraDto(proposta,funcionario));
