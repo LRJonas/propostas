@@ -68,9 +68,8 @@ public class PropostaControllerTest {
         when(propostaService.iniciarVotacao(any(VotacaoInitDto.class))).thenReturn(proposta);
         when(funcionariosClient.getFuncionarioByCpf(anyString())).thenReturn(funcionario);
         ResponseEntity<PropostaResponseDto> resposta = propostaController.iniciarVotacao(dto);
-        assertEquals(HttpStatus.OK, resposta.getStatusCode());
-        assertNotNull(resposta.getBody());
-        assertTrue(resposta.getBody().isAtivo());
+        assertEquals(HttpStatus.NO_CONTENT, resposta.getStatusCode());
+        assertNull(resposta.getBody());
     }
 
     @Test
@@ -86,7 +85,7 @@ public class PropostaControllerTest {
         when(propostaService.votar(any(VotacaoDto.class))).thenReturn(proposta);
         when(funcionariosClient.getFuncionarioByCpf(anyString())).thenReturn(funcionario);
         ResponseEntity<PropostaResponseDto> resposta = propostaController.votar(dto);
-        assertEquals(HttpStatus.OK, resposta.getStatusCode());
+        assertEquals(HttpStatus.CREATED, resposta.getStatusCode());
         assertNotNull(resposta.getBody());
         assertEquals(1, resposta.getBody().getAprovar());
     }
