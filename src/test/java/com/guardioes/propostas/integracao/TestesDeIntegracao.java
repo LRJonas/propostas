@@ -1,4 +1,6 @@
 package com.guardioes.propostas.integracao;
+import com.guardioes.propostas.client.funcionarios.Funcionario;
+import com.guardioes.propostas.client.funcionarios.FuncionariosClient;
 import com.guardioes.propostas.entity.Proposta;
 import com.guardioes.propostas.repository.PropostaRepository;
 import com.guardioes.propostas.repository.VotacaoRepository;
@@ -10,11 +12,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -37,6 +42,9 @@ public class TestesDeIntegracao {
     @Autowired
     private VotacaoRepository votacaoRepository;
 
+    @MockBean
+    private FuncionariosClient funcionariosClient;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -48,10 +56,17 @@ public class TestesDeIntegracao {
 
     @Test
     public void testeCriarPropostaSucesso() throws Exception {
+        Funcionario funcionarioMock = new Funcionario();
+        funcionarioMock.setCpf("46799055064");
+        funcionarioMock.setNome("funcionario teste");
+        funcionarioMock.setAtivo(true);
+
+        when(funcionariosClient.getFuncionarioByCpf(anyString())).thenReturn(funcionarioMock);
+
         PropostaCreateDto propostaDto = new PropostaCreateDto();
         propostaDto.setTitulo("teste");
         propostaDto.setDescricao("teste");
-        propostaDto.setFuncionarioCpf("12345678900");
+        propostaDto.setFuncionarioCpf("46799055064");
 
         ObjectMapper objectMapper = new ObjectMapper();
         String propostaJson = objectMapper.writeValueAsString(propostaDto);
@@ -65,37 +80,51 @@ public class TestesDeIntegracao {
 
     @Test
     public void testeIniciarVotacaoSucesso() throws Exception {
+        Funcionario funcionarioMock = new Funcionario();
+        funcionarioMock.setCpf("46799055064");
+        funcionarioMock.setNome("funcionario teste");
+        funcionarioMock.setAtivo(true);
+
+        when(funcionariosClient.getFuncionarioByCpf(anyString())).thenReturn(funcionarioMock);
+
         PropostaCreateDto propostaDto = new PropostaCreateDto();
         propostaDto.setTitulo("teste");
         propostaDto.setDescricao("teste");
-        propostaDto.setFuncionarioCpf("12345678900");
+        propostaDto.setFuncionarioCpf("46799055064");
 
         mockMvc.perform(post("/api/v1/propostas")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(propostaDto)))
                 .andExpect(status().isCreated());
-        VotacaoInitDto votacaoInitDto = new VotacaoInitDto("teste", "12345678900", 1);
+        VotacaoInitDto votacaoInitDto = new VotacaoInitDto("teste", "46799055064", 1);
         String jsonRequest = objectMapper.writeValueAsString(votacaoInitDto);
 
         mockMvc.perform(patch("/api/v1/propostas/iniciar-votacao")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test
     public void testeVotarSucesso() throws Exception {
+        Funcionario funcionarioMock = new Funcionario();
+        funcionarioMock.setCpf("46799055064");
+        funcionarioMock.setNome("funcionario teste");
+        funcionarioMock.setAtivo(true);
+
+        when(funcionariosClient.getFuncionarioByCpf(anyString())).thenReturn(funcionarioMock);
+
         Proposta proposta = new Proposta();
         proposta.setTitulo("teste");
         proposta.setDescricao("teste");
-        proposta.setFuncionarioCpf("12345678900");
+        proposta.setFuncionarioCpf("46799055064");
         proposta.setAtivo(true);
         propostaRepository.save(proposta);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/propostas/votar")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"titulo\":\"teste\",\"cpf\":\"12345678900\",\"voto\":\"APROVAR\"}"))
-                .andExpect(status().isOk());
+                        .content("{\"titulo\":\"teste\",\"cpf\":\"46799055064\",\"voto\":\"APROVAR\"}"))
+                .andExpect(status().isCreated());
 
     }
 }
