@@ -97,7 +97,7 @@ public class PropostaController {
             @ApiResponse(responseCode = "404", description = "Recurso não encontrado",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = MensagemErro.class))),
-            @ApiResponse(responseCode = "409", description = "Este funcionários já registrou o voto",
+            @ApiResponse(responseCode = "409", description = "Este funcionário já registrou o voto",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = MensagemErro.class))),
             @ApiResponse(responseCode = "422", description = "Esta proposta não foi iniciada para votação",
