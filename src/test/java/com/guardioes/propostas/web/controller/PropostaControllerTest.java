@@ -1,11 +1,10 @@
-package com.guardioes.propostas.controller;
+package com.guardioes.propostas.web.controller;
 
 import com.guardioes.propostas.client.funcionarios.Funcionario;
 import com.guardioes.propostas.client.funcionarios.FuncionariosClient;
 import com.guardioes.propostas.entity.Proposta;
 import com.guardioes.propostas.entity.Votacao;
 import com.guardioes.propostas.service.PropostasService;
-import com.guardioes.propostas.web.controller.PropostaController;
 import com.guardioes.propostas.web.dto.PropostaCreateDto;
 import com.guardioes.propostas.web.dto.PropostaResponseDto;
 import com.guardioes.propostas.web.dto.VotacaoDto;

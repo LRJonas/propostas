@@ -1,6 +1,5 @@
 package com.guardioes.propostas.entity;
 
-import com.guardioes.propostas.client.funcionarios.Funcionario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
